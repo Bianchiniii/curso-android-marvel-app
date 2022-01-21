@@ -1,0 +1,37 @@
+//Config para rodar o detekt sempre que realizar o build do projeto
+apply plugin : "io.gitlab.arturbosch.detekt"
+
+project.afterEvaluate {
+    tasks.named("preBuild"){
+        evaluationDependsOn("detekt")
+    }
+}
+
+detekt{
+    toolVersion = "$detekt_version"
+
+    //caminho dos modulos para fazer a verificação
+    def inputDirFiles = []
+    rootProject.subprojects.each { module ->
+        inputDirFiles << "$module.projectDir/src/main/java"
+    }
+    source = files(inputDirFiles)
+    config = files("$rootDir/config/detekt/detekt.yml")
+    autoCorrect = true
+
+    //Local aonde ficará salvo os relatorios
+    reports {
+        xml {
+            enabled = true
+            destination = file("$buildDir/reports/detekt/detekt.xml")
+        }
+        html {
+            enabled = true
+            destination = file("$buildDir/reports/detekt/detekt.html")
+        }
+        txt {
+            enabled = true
+            destination = file("$buildDir/reports/detekt/detekt.txt")
+        }
+    }
+}
