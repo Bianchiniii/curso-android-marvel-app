@@ -28,9 +28,24 @@ class MainActivity : AppCompatActivity() {
         //vinculo para que o navcontroller gerencie a aplicação, back button, etc
         binding.bottomNaMain.setupWithNavController(navController)
 
-        appBarConfiguration = AppBarConfiguration(setOf())
+        //Destinos iniciais para que possa realizar a alteração das visibilidades dos botões
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.charactersFragment,
+                R.id.favoritesFragment,
+                R.id.aboutFragment
+            )
+        )
 
         //config da toolbar vinculada ao nav
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val isTopLevelDestination =
+                appBarConfiguration.topLevelDestinations.contains(destination.id)
+            if (!isTopLevelDestination) {
+                binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+            }
+        }
     }
 }
