@@ -29,5 +29,8 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNaMain.setupWithNavController(navController)
 
         appBarConfiguration = AppBarConfiguration(setOf())
+
+        //config da toolbar vinculada ao nav
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
     }
 }
