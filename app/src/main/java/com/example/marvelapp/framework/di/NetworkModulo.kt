@@ -1,5 +1,6 @@
 package com.example.marvelapp.framework.di
 
+import com.bianchini.vinicius.matheus.core.data.network.interceptor.AuthorizationInterceptor
 import com.example.marvelapp.BuildConfig
 import dagger.Module
 import dagger.Provides
@@ -9,11 +10,13 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModulo {
+    private const val TIMEOUT_SECONDS = 15L
 
     //Mostra as requisições realizadas no logcat em modo degub
     @Provides
@@ -28,11 +31,24 @@ object NetworkModulo {
     }
 
     @Provides
-    fun providesOkHttpCliente(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun providesAuthorizationInterceptor(): AuthorizationInterceptor {
+        return AuthorizationInterceptor(
+            BuildConfig.PUBLIC_KEY,
+            BuildConfig.PRIVATE_KEY,
+            Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+        )
+    }
+
+    @Provides
+    fun providesOkHttpCliente(
+        loggingInterceptor: HttpLoggingInterceptor,
+        authorizationInterceptor: AuthorizationInterceptor
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .readTimeout(15, TimeUnit.SECONDS)
-            .connectTimeout(15, TimeUnit.SECONDS)
+            .addInterceptor(authorizationInterceptor)
+            .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
     }
 
