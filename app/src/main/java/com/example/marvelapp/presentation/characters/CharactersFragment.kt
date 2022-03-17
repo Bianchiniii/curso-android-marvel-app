@@ -12,13 +12,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CharactersFragment : Fragment() {
     private lateinit var binding: FragmentCharactersBinding
+    private val charactersAdapter = CharactersAdapter()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCharactersBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    ) = FragmentCharactersBinding.inflate(layoutInflater, container, false).apply {
+        binding = this
+    }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,10 +26,11 @@ class CharactersFragment : Fragment() {
     }
 
     private fun initCharactersAdapter() {
+        //entrar no contexto do obj da pra utilizar o RUN ou WITH
         with(binding.recyclerCharacters) {
-            //itens com tamanho fixo, auxilia no desempenho'1
+            //itens com tamanho fixo, auxilia no desempenho
             setHasFixedSize(true)
-
+            adapter = charactersAdapter
         }
     }
 }
