@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CharactersFragment : Fragment() {
     private lateinit var binding: FragmentCharactersBinding
     private val charactersAdapter = CharactersAdapter()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,6 +23,7 @@ class CharactersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initCharactersAdapter()
     }
 
