@@ -10,31 +10,25 @@ import com.example.marvelapp.framework.network.response.toCharacterModel
 class CharactersPagingSource(
     private val remoteDataSource: CharactersRemoteDataSource<DataWrapperResponse>,
     private val query: String
-) :
-    PagingSource<Int, Character>() {
+) : PagingSource<Int, Character>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Character> {
         return try {
             val offset = params.key ?: 0
-            //difinição dos parametros para a URL
-            //chave, valor
-            val queries = hashMapOf(
-                "offset" to offset.toString()
-            )
-            if (query.isNotEmpty()) {
-                queries["nameStartsWith"] = query
-            }
+
+            val queries = hashMapOf(OFFSET to offset.toString())
+
+            if (query.isNotEmpty()) queries[NAME_STARTS_WITH] = query
 
             val response = remoteDataSource.fetchCharacters(queries)
-            val responseOffset = response.data.offset
-            val totalCharacter = response.data.total
+
+            val responseOffSet = response.data.offset
+            val responseTotal = response.data.total
 
             LoadResult.Page(
                 data = response.data.results.map { it.toCharacterModel() },
                 prevKey = null,
-                nextKey = if (responseOffset < totalCharacter) {
-                    responseOffset + LIMIT
-                } else null
+                nextKey = if (responseOffSet < responseTotal) responseOffSet + LIMIT else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
@@ -42,14 +36,16 @@ class CharactersPagingSource(
     }
 
     override fun getRefreshKey(state: PagingState<Int, Character>): Int? {
-        //recupera a posição do adapter
+        //executado quando precisar invalidar o adapter, ex :swipe, etc ou quando acontecer um process death
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(LIMIT) ?: anchorPage?.prevKey?.minus(LIMIT)
+            anchorPage?.prevKey?.plus(LIMIT) ?: anchorPage?.nextKey?.minus(LIMIT)
         }
     }
 
     companion object {
+        private const val OFFSET = "offset"
+        private const val NAME_STARTS_WITH = "nameStartsWith"
         private const val LIMIT = 20
     }
 }
