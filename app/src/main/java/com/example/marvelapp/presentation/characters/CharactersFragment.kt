@@ -65,7 +65,13 @@ class CharactersFragment : Fragment() {
                         FLIPPER_CHILD_CHARACTERS
                     }
 
-                    is LoadState.Error -> FLIPPER_CHILD_ERROR
+                    is LoadState.Error -> {
+                        setShimmerVisibility(false)
+                        binding.includeViewCharactersErrorState.buttonRetry.setOnClickListener {
+                            charactersAdapter.refresh()
+                        }
+                        FLIPPER_CHILD_ERROR
+                    }
                 }
             }
         }
