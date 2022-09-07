@@ -52,6 +52,7 @@ class CharactersFragment : Fragment() {
     }
 
     private fun initCharactersAdapter() {
+        charactersAdapter = CharactersAdapter()
         //entrar no contexto do obj da pra utilizar o RUN ou WITH
         with(binding.recyclerCharacters) {
             //itens com tamanho fixo, auxilia no desempenho
