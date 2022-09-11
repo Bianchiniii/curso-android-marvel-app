@@ -55,8 +55,11 @@ class CharactersFragment : Fragment() {
         //entrar no contexto do obj da pra utilizar o RUN ou WITH
         with(binding.recyclerCharacters) {
             //itens com tamanho fixo, auxilia no desempenho
+            scrollToPosition(INIT_POSITION_ADAPTER)
             setHasFixedSize(true)
-            adapter = charactersAdapter
+            adapter = charactersAdapter.withLoadStateFooter(
+                footer = CharactersLoadingMoreStateAdapter { charactersAdapter.retry() }
+            )
         }
     }
 
@@ -97,5 +100,6 @@ class CharactersFragment : Fragment() {
         private const val FLIPPER_CHILD_LOADING = 0
         private const val FLIPPER_CHILD_CHARACTERS = 1
         private const val FLIPPER_CHILD_ERROR = 2
+        private const val INIT_POSITION_ADAPTER = 0
     }
 }
