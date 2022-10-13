@@ -1,21 +1,16 @@
 package com.example.marvelapp.presentation.characters
 
 import androidx.paging.PagingData
-import com.bianchini.vinicius.matheus.core.domain.model.Character
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
 import com.exemplo.testing.MainCoroutineRule
+import com.exemplo.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -40,12 +35,12 @@ class CharacterViewModelTest {
     @Mock
     lateinit var getCharactersUseCase: GetCharactersUseCase
 
+    private val characterFactory: CharacterFactory = CharacterFactory()
+
     private val pagingDataCharacter = PagingData.from(
         listOf(
-            Character(
-                "3-D Man",
-                "https://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784"
-            )
+            characterFactory.create(CharacterFactory.Companion.Hero.ThreedMan),
+            characterFactory.create(CharacterFactory.Companion.Hero.Alexandre)
         )
     )
 
