@@ -21,9 +21,10 @@ class GetCharactersUseCaseImpl @Inject constructor(
 ) : PagingUseCase<GetCharactersParams, Character>(), GetCharactersUseCase {
 
     override fun createFlowObservable(params: GetCharactersParams): Flow<PagingData<Character>> {
+        val result = charactersRepository.getCharacters(params.query)
         return Pager(params.pagingConfig) {
             //paging source
-            charactersRepository.getCharacters(params.query)
+            result
         }.flow
     }
 }
