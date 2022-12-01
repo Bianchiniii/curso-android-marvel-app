@@ -19,9 +19,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+//THIS TEST SHOULD BE IN CORE PACKAGE
 @RunWith(MockitoJUnitRunner::class)
 class GetCharactersUseCaseImplTest {
 
+    //regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
     @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
@@ -33,7 +35,7 @@ class GetCharactersUseCaseImplTest {
     @Mock
     lateinit var charactersRepository: CharactersRepository
 
-    private val hero = CharacterFactory().create(CharacterFactory.Companion.Hero.Alexandre)
+    private val hero = CharacterFactory().create(CharacterFactory.Hero.ABomb)
     private val fakePagingSource = PagingSourceFactory().create(listOf(hero))
 
     @Before

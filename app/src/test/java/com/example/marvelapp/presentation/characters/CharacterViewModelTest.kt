@@ -39,8 +39,8 @@ class CharacterViewModelTest {
 
     private val pagingDataCharacter = PagingData.from(
         listOf(
-            characterFactory.create(CharacterFactory.Companion.Hero.ThreedMan),
-            characterFactory.create(CharacterFactory.Companion.Hero.Alexandre)
+            characterFactory.create(CharacterFactory.Hero.ABomb),
+            characterFactory.create(CharacterFactory.Hero.ThreeDMan)
         )
     )
 
