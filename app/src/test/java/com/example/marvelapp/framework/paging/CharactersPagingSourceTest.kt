@@ -72,4 +72,31 @@ class CharactersPagingSourceTest {
             result
         )
     }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `should return a error result when load is called`() = runBlockingTest {
+        //arrange
+        val runtimeException = RuntimeException()
+        whenever(charactersRemoteDataSource.fetchCharacters(any())).thenThrow(
+            runtimeException
+        )
+
+        //act
+        val result = charactersPagingSource.load(
+            PagingSource.LoadParams.Refresh(
+                null,
+                2,
+                false
+            )
+        )
+
+        //assert
+        assertEquals(
+            PagingSource.LoadResult.Error<Int, Character>(
+                runtimeException
+            ),
+            result
+        )
+    }
 }
