@@ -17,6 +17,15 @@ android {
     compileSdkVersion 32
     buildToolsVersion "30.0.3"
 
+    signingConfigs {
+        release {
+            storeFile file('E:\\Projetos\\curso-android-marvel-app\\store\\marvel_app_key_store.jks')
+            storePassword 'elefante0706'
+            keyAlias 'marvel-app'
+            keyPassword 'elefante0706'
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.marvelapp"
         minSdkVersion 23
@@ -33,8 +42,23 @@ android {
     }
 
     buildTypes {
+        debug {
+            debuggable true
+            applicationIdSuffix '.debug'
+        }
+        staging {
+            initWith debug
+            minifyEnabled true
+            applicationIdSuffix '.staging'
+            // habilita para conseguir realizar o debug
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
+                    'proguard-rules-staging.pro'
+        }
         release {
-            minifyEnabled false
+            //ativa a ofuscação
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
