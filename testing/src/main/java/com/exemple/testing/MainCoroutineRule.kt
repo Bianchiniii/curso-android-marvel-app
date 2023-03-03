@@ -1,4 +1,4 @@
-package com.exemplo.testing
+package com.exemple.testing
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

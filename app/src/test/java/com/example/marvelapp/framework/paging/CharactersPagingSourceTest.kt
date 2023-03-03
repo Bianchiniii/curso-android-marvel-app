@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import com.bianchini.vinicius.matheus.core.data.repository.CharactersRemoteDataSource
 import com.example.marvelapp.factory.response.DataWrapperResponseFactory
 import com.example.marvelapp.framework.network.response.DataWrapperResponse
-import com.exemplo.testing.MainCoroutineRule
-import com.exemplo.testing.model.CharacterFactory
+import com.exemple.testing.MainCoroutineRule
+import com.exemple.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi

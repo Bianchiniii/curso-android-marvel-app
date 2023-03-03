@@ -1,4 +1,4 @@
-package com.exemplo.testing.model
+package com.exemple.testing.model
 
 import com.bianchini.vinicius.matheus.core.domain.model.Character
 

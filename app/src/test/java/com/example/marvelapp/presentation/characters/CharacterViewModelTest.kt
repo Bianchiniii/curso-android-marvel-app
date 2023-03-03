@@ -2,8 +2,8 @@ package com.example.marvelapp.presentation.characters
 
 import androidx.paging.PagingData
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
-import com.exemplo.testing.MainCoroutineRule
-import com.exemplo.testing.model.CharacterFactory
+import com.exemple.testing.MainCoroutineRule
+import com.exemple.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.TestCase.assertEquals
