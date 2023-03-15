@@ -12,5 +12,5 @@ object BaseUrlTestModule {
 
     @BaseUrl
     @Provides
-    fun providesBaseUrl(): String = "htpp://localhost:8080/"
+    fun providesBaseUrl(): String = "http://localhost:8080/"
 }
