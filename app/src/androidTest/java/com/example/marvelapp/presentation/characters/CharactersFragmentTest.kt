@@ -1,6 +1,5 @@
 package com.example.marvelapp.presentation.characters
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -68,6 +67,17 @@ class CharactersFragmentTest {
         // Assert
         onView(
             withText("Amora")
+        ).check(
+            matches(isDisplayed())
+        )
+    }
+
+    @Test
+    fun shouldShowErrorView_whenReceivesAnErrorFromApi() {
+        server.enqueue(MockResponse().setResponseCode(404))
+
+        onView(
+            withId(R.id.include_view_characters_error_state)
         ).check(
             matches(isDisplayed())
         )
