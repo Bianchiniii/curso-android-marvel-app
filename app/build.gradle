@@ -36,10 +36,19 @@ android {
 
         testInstrumentationRunner "com.example.marvelapp.CustomTestRunner"
 
+        // The following argument makes the Android Test Orchestrator run its
+        // "pm clear" command after each test invocation. This command ensures
+        // that the app's state is completely cleared between tests.
+        testInstrumentationRunnerArguments clearPackageData: 'true'
+
         //configuração das base urk e chaves de api
         buildConfigField("String", "PUBLIC_KEY", apikeyProperties['PUBLIC_KEY'])
         buildConfigField("String", "PRIVATE_KEY", apikeyProperties['PRIVATE_KEY'])
         buildConfigField("String", "BASE_URL", '"https://gateway.marvel.com:443/v1/public/"')
+    }
+
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     buildTypes {
@@ -138,6 +147,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.10.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestUtil 'androidx.test:orchestrator:1.4.2'
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.3.0"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
