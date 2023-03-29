@@ -1,11 +1,9 @@
-package com.example.marvelapp.presentation.deatils
+package com.example.marvelapp.presentation.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.marvelapp.R
 import com.example.marvelapp.databinding.FragmentDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 
