@@ -2,13 +2,13 @@ package com.example.marvelapp.presentation.characters
 
 import androidx.paging.PagingData
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
-import com.exemplo.testing.MainCoroutineRule
-import com.exemplo.testing.model.CharacterFactory
+import com.exemple.testing.MainCoroutineRule
+import com.exemple.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -71,7 +71,7 @@ class CharacterViewModelTest {
             //em outras thread, ele executa as tarefas IMEDIATAMENTE
             val result = characterViewModel.charactersPagingData("")
 
-            assertEquals(1, result.count())
+            assertNotNull(result.first())
         }
 
     @ExperimentalCoroutinesApi

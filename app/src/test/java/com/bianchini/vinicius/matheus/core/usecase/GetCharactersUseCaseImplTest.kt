@@ -2,9 +2,9 @@ package com.bianchini.vinicius.matheus.core.usecase
 
 import androidx.paging.PagingConfig
 import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
-import com.exemplo.testing.MainCoroutineRule
-import com.exemplo.testing.model.CharacterFactory
-import com.exemplo.testing.pagingsource.PagingSourceFactory
+import com.exemple.testing.MainCoroutineRule
+import com.exemple.testing.model.CharacterFactory
+import com.exemple.testing.pagingsource.PagingSourceFactory
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
