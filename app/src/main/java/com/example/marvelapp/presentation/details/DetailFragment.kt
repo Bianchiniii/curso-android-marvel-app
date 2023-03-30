@@ -11,9 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
-    private val binding: FragmentDetailBinding get() = _binding!!
+//    private val binding: FragmentDetailBinding get() = _binding!!
 
-    private lateinit var viewModel: DetailViewModel
+//    private lateinit var viewModel: DetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
