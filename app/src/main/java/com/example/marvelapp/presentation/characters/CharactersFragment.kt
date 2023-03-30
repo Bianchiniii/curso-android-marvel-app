@@ -10,8 +10,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.marvelapp.databinding.FragmentCharactersBinding
+import com.example.marvelapp.presentation.details.DetailViewArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,7 +23,7 @@ import kotlinx.coroutines.launch
 class CharactersFragment : Fragment() {
 
     private lateinit var binding: FragmentCharactersBinding
-    private val charactersAdapter by lazy { CharactersAdapter() }
+    private lateinit var charactersAdapter: CharactersAdapter
 
     private val viewModel: CharacterViewModel by viewModels()
 
@@ -51,6 +54,21 @@ class CharactersFragment : Fragment() {
     }
 
     private fun initCharactersAdapter() {
+        charactersAdapter = CharactersAdapter { character, view ->
+            val extras = FragmentNavigatorExtras(
+                view to character.name
+            )
+            val directions = CharactersFragmentDirections
+                .actionCharactersFragmentToDetailFragment(
+                    character.name,
+                    DetailViewArg(
+                        character.name,
+                        character.imageUrl
+                    )
+                )
+
+            findNavController().navigate(directions, extras)
+        }
         //entrar no contexto do obj da pra utilizar o RUN ou WITH
         with(binding.recyclerCharacters) {
             //itens com tamanho fixo, auxilia no desempenho
