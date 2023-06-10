@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
 import com.example.marvelapp.R
 import com.example.marvelapp.databinding.FragmentDetailBinding
 import com.example.marvelapp.framework.imageloader.GlideImageLoader
@@ -18,7 +17,7 @@ import javax.inject.Inject
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
-//    private val binding: FragmentDetailBinding get() = _binding!!
+    private val binding: FragmentDetailBinding get() = _binding!!
 
 //    private lateinit var viewModel: DetailViewModel
 

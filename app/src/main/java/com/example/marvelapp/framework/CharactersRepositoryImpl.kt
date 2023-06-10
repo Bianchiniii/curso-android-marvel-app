@@ -9,7 +9,7 @@ import com.example.marvelapp.framework.paging.CharactersPagingSource
 import javax.inject.Inject
 
 class CharactersRepositoryImpl @Inject constructor(
-    private val remoteDataSource: CharactersRemoteDataSource<DataWrapperResponse>
+    private val remoteDataSource: CharactersRemoteDataSource
 ) : CharactersRepository {
 
     override fun getCharacters(query: String): PagingSource<Int, Character> {
