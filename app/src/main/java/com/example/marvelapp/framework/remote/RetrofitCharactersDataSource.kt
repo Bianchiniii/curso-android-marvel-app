@@ -2,8 +2,10 @@ package com.example.marvelapp.framework.remote
 
 import com.bianchini.vinicius.matheus.core.data.repository.CharactersRemoteDataSource
 import com.bianchini.vinicius.matheus.core.domain.model.CharacterPaging
+import com.bianchini.vinicius.matheus.core.domain.model.Comic
 import com.example.marvelapp.framework.network.MarvelApi
 import com.example.marvelapp.framework.network.response.toCharacterModel
+import com.example.marvelapp.framework.network.response.toComicModel
 import javax.inject.Inject
 
 class RetrofitCharactersDataSource @Inject constructor(
@@ -17,9 +19,15 @@ class RetrofitCharactersDataSource @Inject constructor(
         }
 
         return CharacterPaging(
-            results = characters,
-            offset = data.data.offset,
-            total = data.data.total
+                results = characters,
+                offset = data.data.offset,
+                total = data.data.total
         )
+    }
+
+    override suspend fun fetchComics(characterId: Int): List<Comic> {
+        return marvelApi.getCharacterComics(characterId).data.results.map {
+            it.toComicModel()
+        }
     }
 }

@@ -19,7 +19,7 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding: FragmentDetailBinding get() = _binding!!
 
-//    private lateinit var viewModel: DetailViewModel
+    private lateinit var viewModel: DetailViewModel
 
     private val args by navArgs<DetailFragmentArgs>()
 

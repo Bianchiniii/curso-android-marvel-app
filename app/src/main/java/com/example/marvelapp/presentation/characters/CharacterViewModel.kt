@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CharacterViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase
+    private val getCharactersUseCase: GetCharactersUseCase,
 ) : ViewModel() {
 
     fun charactersPagingData(queries: String): Flow<PagingData<Character>> {
