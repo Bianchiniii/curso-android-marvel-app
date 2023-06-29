@@ -16,6 +16,7 @@ import androidx.paging.LoadState
 import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.GlideImageLoader
 import com.example.marvelapp.presentation.details.DetailViewArg
+import com.example.marvelapp.utils.collectWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -45,16 +46,8 @@ class CharactersFragment : Fragment() {
         initCharactersAdapter()
         observeInitialLoadState()
 
-        lifecycleScope.launch {
-            /*
-            UTILIZAR QUANDO USAR FLOW, DESSA FORMA QUANDO O APP VAI PRA BACKGROUND PARA DE ESCUTAR
-            O FLOW PARA NÃO TENTAR ATUALIZAR A TELA E DAR CRASH DO APP
-             */
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.charactersPagingData("").collect { pagingData ->
-                    charactersAdapter.submitData(pagingData)
-                }
-            }
+        viewModel.charactersPagingData("").collectWithLifecycle(viewLifecycleOwner) { pagingData ->
+            charactersAdapter.submitData(pagingData)
         }
     }
 
@@ -67,6 +60,7 @@ class CharactersFragment : Fragment() {
                 .actionCharactersFragmentToDetailFragment(
                     character.name,
                     DetailViewArg(
+                        character.id,
                         character.name,
                         character.imageUrl
                     )
@@ -93,6 +87,7 @@ class CharactersFragment : Fragment() {
                         setShimmerVisibility(true)
                         FLIPPER_CHILD_LOADING
                     }
+
                     is LoadState.NotLoading -> {
                         setShimmerVisibility(false)
                         FLIPPER_CHILD_CHARACTERS

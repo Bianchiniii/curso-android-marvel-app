@@ -15,10 +15,11 @@ interface GetComicsUseCase {
 }
 
 class GetComicsUseCaseImpl @Inject constructor(
-        private val charactersRepository: CharactersRepository
+    private val charactersRepository: CharactersRepository
 ) : GetComicsUseCase, UseCase<GetComicsUseCase.GetComicsParams, List<Comic>>() {
+
     override suspend fun doWork(
-            params: GetComicsUseCase.GetComicsParams
+        params: GetComicsUseCase.GetComicsParams
     ): ResultStatus<List<Comic>> {
         val comics = charactersRepository.getComics(params.characterId)
 
