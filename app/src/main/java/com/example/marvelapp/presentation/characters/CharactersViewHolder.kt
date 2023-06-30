@@ -1,11 +1,9 @@
 package com.example.marvelapp.presentation.characters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bianchini.vinicius.matheus.core.domain.model.Character
-import com.example.marvelapp.R
 import com.example.marvelapp.databinding.ItemCharactersBinding
 import com.example.marvelapp.framework.imageloader.GlideImageLoader
 import com.example.marvelapp.utils.CharacterItemClick
@@ -24,7 +22,7 @@ class CharactersViewHolder @Inject constructor(
     fun bind(character: Character) {
         imageCharacter.transitionName = character.name
         textName.text = character.name
-        imageLoader.load(imageCharacter, character.imageUrl, R.drawable.ic_img_loading_error)
+        imageLoader.load(imageCharacter, character.imageUrl)
 
         itemView.setOnClickListener {
             onItemClick.invoke(character, imageCharacter)

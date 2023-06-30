@@ -5,7 +5,7 @@ import com.bianchini.vinicius.matheus.core.data.repository.CharactersRemoteDataS
 import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
 import com.bianchini.vinicius.matheus.core.domain.model.Character
 import com.bianchini.vinicius.matheus.core.domain.model.Comic
-import com.example.marvelapp.framework.network.response.DataWrapperResponse
+import com.bianchini.vinicius.matheus.core.domain.model.Event
 import com.example.marvelapp.framework.paging.CharactersPagingSource
 import javax.inject.Inject
 
@@ -19,5 +19,9 @@ class CharactersRepositoryImpl @Inject constructor(
 
     override suspend fun getComics(characterId: Int): List<Comic> {
         return remoteDataSource.fetchComics(characterId)
+    }
+
+    override suspend fun getEvents(characterId: Int): List<Event> {
+        return remoteDataSource.fetchEvent(characterId)
     }
 }

@@ -2,7 +2,7 @@ package com.example.marvelapp.framework.di
 
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCaseImpl
-import com.bianchini.vinicius.matheus.core.usecase.GetComicsUseCase
+import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetComicsUseCaseImpl
 import dagger.Binds
 import dagger.Module
@@ -17,5 +17,5 @@ interface UseCaseModule {
     fun bidsCharactersUseCase(useCaseImpl: GetCharactersUseCaseImpl): GetCharactersUseCase
 
     @Binds
-    fun bindsComicsUseCase(useCaseImpl: GetComicsUseCaseImpl): GetComicsUseCase
+    fun bindsComicsUseCase(useCaseImpl: GetComicsUseCaseImpl): GetCharacterCategoriesUseCase
 }
