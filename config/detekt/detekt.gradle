@@ -1,19 +1,21 @@
 //Config para rodar o detekt sempre que realizar o build do projeto
-apply plugin : "io.gitlab.arturbosch.detekt"
+apply plugin: "io.gitlab.arturbosch.detekt"
 
 project.afterEvaluate {
-    tasks.named("preBuild"){
+    tasks.named("preBuild") {
         dependsOn("detekt")
     }
 }
 
-detekt{
+detekt {
     toolVersion = "$detekt_version"
 
     //caminho dos modulos para fazer a verificação
     def inputDirFiles = []
     rootProject.subprojects.each { module ->
-        inputDirFiles << "$module.projectDir/src/main/java"
+        if (module.name != "testing") {
+            inputDirFiles << "$module.projectDir/src/main/java"
+        }
     }
     source = files(inputDirFiles)
     config = files("$rootDir/config/detekt/detekt.yml")
