@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    app:shimmer_repeat_mode="restart"
+    app:shimmer_shape="radial">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@color/medium_grey" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/medium_grey" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+            <include layout="@layout/shimmer_layout_category_item" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</com.facebook.shimmer.ShimmerFrameLayout>

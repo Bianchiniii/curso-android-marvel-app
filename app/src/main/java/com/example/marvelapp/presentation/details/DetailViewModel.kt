@@ -23,7 +23,7 @@ class DetailViewModel @Inject constructor(
     private val _uiStateFlow = MutableStateFlow<UiState>(UiState.Loading)
     val uiState: StateFlow<UiState> get() = _uiStateFlow
 
-    fun getComics(characterId: Int) = viewModelScope.launch {
+    fun getCharactersCategories(characterId: Int) = viewModelScope.launch {
         getCharacterCategoriesUseCase(GetCharacterCategoriesUseCase.GetComicsParams(characterId)).watchStatus()
     }
 
@@ -65,7 +65,9 @@ class DetailViewModel @Inject constructor(
                                 }
                             }
 
-                            UiState.Success(detailsParentList)
+                            if (detailsParentList.isEmpty()) {
+                                UiState.Empty
+                            } else UiState.Success(detailsParentList)
                         }
                     }
                 }
@@ -76,5 +78,6 @@ class DetailViewModel @Inject constructor(
         object Loading : UiState()
         data class Success(val detailParentVE: List<DetailParentVE>) : UiState()
         object Error : UiState()
+        object Empty : UiState()
     }
 }
