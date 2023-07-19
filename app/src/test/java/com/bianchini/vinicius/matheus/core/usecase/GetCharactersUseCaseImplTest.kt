@@ -10,7 +10,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -19,12 +19,12 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 //THIS TEST SHOULD BE IN CORE PACKAGE
 @RunWith(MockitoJUnitRunner::class)
 class GetCharactersUseCaseImplTest {
 
     //regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
-    @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
@@ -45,7 +45,7 @@ class GetCharactersUseCaseImplTest {
 
     @Test
     fun `should valida flow paging data creation when invoke from use case is called`() =
-        runBlockingTest {
+        runTest {
 
             whenever(charactersRepository.getCharacters("")).thenReturn(fakePagingSource)
 

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:drawableTop="@drawable/ic_dissatisfied"
-        android:text="@string/error_loading_characters"
+        android:text="@string/error_loading_data"
         android:textAlignment="center"
         android:textSize="32sp" />
 

@@ -10,7 +10,7 @@ import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,11 +18,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+//regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CharacterViewModelTest {
 
-    //regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
-    @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
@@ -47,7 +47,7 @@ class CharacterViewModelTest {
     //a classe que sera realiazada os testes jamais devera ser mockada
     private lateinit var characterViewModel: CharacterViewModel
 
-    @ExperimentalCoroutinesApi
+
     //com a anotação @Before o metodo sera executado antes de cada teste
     @Before
     fun setUp() {
@@ -55,11 +55,10 @@ class CharacterViewModelTest {
         characterViewModel = CharacterViewModel(getCharactersUseCase)
     }
 
-    @ExperimentalCoroutinesApi
     //teste a ser realizado
     @Test
     fun `should validate the paging data object values when calling characters`() =
-        runBlockingTest {
+        runTest {
             //quando o viewModel chamar o getCharactersUseCase.invoke
             whenever(getCharactersUseCase.invoke(any())).thenReturn(
                 flowOf(
@@ -74,10 +73,9 @@ class CharacterViewModelTest {
             assertNotNull(result.first())
         }
 
-    @ExperimentalCoroutinesApi
     @Test(expected = RuntimeException::class)
     fun `should throw an exception whe the calling to the use case returns an exception`() =
-        runBlockingTest {
+        runTest {
             whenever(getCharactersUseCase.invoke(any())).thenThrow(RuntimeException())
 
             characterViewModel.charactersPagingData("")

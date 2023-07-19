@@ -1,6 +1,13 @@
 package com.bianchini.vinicius.matheus.core.data.repository
 
-//<T> dessa forma quem implementar deve especificar o tipo de retorno objeto que deseja
-interface CharactersRemoteDataSource<T> {
-    suspend fun fetchCharacters(queries: Map<String, String>): T
+import com.bianchini.vinicius.matheus.core.domain.model.CharacterPaging
+import com.bianchini.vinicius.matheus.core.domain.model.Comic
+import com.bianchini.vinicius.matheus.core.domain.model.Event
+
+interface CharactersRemoteDataSource {
+    suspend fun fetchCharacters(queries: Map<String, String>): CharacterPaging
+
+    suspend fun fetchComics(characterId: Int): List<Comic>
+
+    suspend fun fetchEvent(characterId: Int): List<Event>
 }
