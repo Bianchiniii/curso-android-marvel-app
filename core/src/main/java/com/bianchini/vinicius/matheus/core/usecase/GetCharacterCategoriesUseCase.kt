@@ -14,22 +14,22 @@ import javax.inject.Inject
 interface GetCharacterCategoriesUseCase {
 
     operator fun invoke(
-        params: GetComicsParams
+        params: GetCharacterCategoriesParams
     ): Flow<ResultStatus<Pair<List<Comic>, List<Event>>>>
 
-    data class GetComicsParams(
+    data class GetCharacterCategoriesParams(
         val characterId: Int
     )
 }
 
-class GetComicsUseCaseImpl @Inject constructor(
+class GetCharacterCategoriesUseCaseImpl @Inject constructor(
     private val charactersRepository: CharactersRepository,
     private val dispatchers: CoroutinesDispatchers
 ) : GetCharacterCategoriesUseCase,
-    UseCase<GetCharacterCategoriesUseCase.GetComicsParams, Pair<List<Comic>, List<Event>>>() {
+    UseCase<GetCharacterCategoriesUseCase.GetCharacterCategoriesParams, Pair<List<Comic>, List<Event>>>() {
 
     override suspend fun doWork(
-        params: GetCharacterCategoriesUseCase.GetComicsParams
+        params: GetCharacterCategoriesUseCase.GetCharacterCategoriesParams
     ): ResultStatus<Pair<List<Comic>, List<Event>>> {
         return withContext(dispatchers.io()) {
             val comicsDeferred = async { charactersRepository.getComics(params.characterId) }

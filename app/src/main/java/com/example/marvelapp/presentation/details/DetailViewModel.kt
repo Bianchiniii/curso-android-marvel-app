@@ -24,7 +24,9 @@ class DetailViewModel @Inject constructor(
     val uiState: StateFlow<UiState> get() = _uiStateFlow
 
     fun getCharactersCategories(characterId: Int) = viewModelScope.launch {
-        getCharacterCategoriesUseCase(GetCharacterCategoriesUseCase.GetComicsParams(characterId)).watchStatus()
+        getCharacterCategoriesUseCase(
+            GetCharacterCategoriesUseCase.GetCharacterCategoriesParams(characterId)
+        ).watchStatus()
     }
 
     private fun Flow<ResultStatus<Pair<List<Comic>, List<Event>>>>.watchStatus() =
