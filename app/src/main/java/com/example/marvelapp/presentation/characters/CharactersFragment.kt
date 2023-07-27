@@ -7,23 +7,29 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.marvelapp.databinding.FragmentCharactersBinding
+import com.example.marvelapp.framework.imageloader.GlideImageLoader
+import com.example.marvelapp.presentation.details.DetailViewArg
+import com.example.marvelapp.utils.collectWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CharactersFragment : Fragment() {
 
     private lateinit var binding: FragmentCharactersBinding
-    private val charactersAdapter by lazy { CharactersAdapter() }
+    private lateinit var charactersAdapter: CharactersAdapter
 
     private val viewModel: CharacterViewModel by viewModels()
+
+    @Inject
+    lateinit var imageLoader: GlideImageLoader
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,20 +44,28 @@ class CharactersFragment : Fragment() {
         initCharactersAdapter()
         observeInitialLoadState()
 
-        lifecycleScope.launch {
-            /*
-            UTILIZAR QUANDO USAR FLOW, DESSA FORMA QUANDO O APP VAI PRA BACKGROUND PARA DE ESCUTAR
-            O FLOW PARA NÃO TENTAR ATUALIZAR A TELA E DAR CRASH DO APP
-             */
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.charactersPagingData("").collect { pagingData ->
-                    charactersAdapter.submitData(pagingData)
-                }
-            }
+        viewModel.charactersPagingData("").collectWithLifecycle(viewLifecycleOwner) { pagingData ->
+            charactersAdapter.submitData(pagingData)
         }
     }
 
     private fun initCharactersAdapter() {
+        charactersAdapter = CharactersAdapter(imageLoader) { character, view ->
+            val extras = FragmentNavigatorExtras(
+                view to character.name
+            )
+            val directions = CharactersFragmentDirections
+                .actionCharactersFragmentToDetailFragment(
+                    character.name,
+                    DetailViewArg(
+                        character.id,
+                        character.name,
+                        character.imageUrl
+                    )
+                )
+
+            findNavController().navigate(directions, extras)
+        }
         //entrar no contexto do obj da pra utilizar o RUN ou WITH
         with(binding.recyclerCharacters) {
             //itens com tamanho fixo, auxilia no desempenho
@@ -71,6 +85,7 @@ class CharactersFragment : Fragment() {
                         setShimmerVisibility(true)
                         FLIPPER_CHILD_LOADING
                     }
+
                     is LoadState.NotLoading -> {
                         setShimmerVisibility(false)
                         FLIPPER_CHILD_CHARACTERS
@@ -79,7 +94,7 @@ class CharactersFragment : Fragment() {
                     is LoadState.Error -> {
                         setShimmerVisibility(false)
                         binding.includeViewCharactersErrorState.buttonRetry.setOnClickListener {
-                            charactersAdapter.refresh()
+                            charactersAdapter.retry()
                         }
                         FLIPPER_CHILD_ERROR
                     }

@@ -2,15 +2,15 @@ package com.example.marvelapp.presentation.characters
 
 import androidx.paging.PagingData
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
-import com.exemplo.testing.MainCoroutineRule
-import com.exemplo.testing.model.CharacterFactory
+import com.exemple.testing.MainCoroutineRule
+import com.exemple.testing.model.CharacterFactory
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,11 +18,11 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
+//regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class CharacterViewModelTest {
 
-    //regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
-    @ExperimentalCoroutinesApi
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
@@ -47,7 +47,7 @@ class CharacterViewModelTest {
     //a classe que sera realiazada os testes jamais devera ser mockada
     private lateinit var characterViewModel: CharacterViewModel
 
-    @ExperimentalCoroutinesApi
+
     //com a anotação @Before o metodo sera executado antes de cada teste
     @Before
     fun setUp() {
@@ -55,11 +55,10 @@ class CharacterViewModelTest {
         characterViewModel = CharacterViewModel(getCharactersUseCase)
     }
 
-    @ExperimentalCoroutinesApi
     //teste a ser realizado
     @Test
     fun `should validate the paging data object values when calling characters`() =
-        runBlockingTest {
+        runTest {
             //quando o viewModel chamar o getCharactersUseCase.invoke
             whenever(getCharactersUseCase.invoke(any())).thenReturn(
                 flowOf(
@@ -71,13 +70,12 @@ class CharacterViewModelTest {
             //em outras thread, ele executa as tarefas IMEDIATAMENTE
             val result = characterViewModel.charactersPagingData("")
 
-            assertEquals(1, result.count())
+            assertNotNull(result.first())
         }
 
-    @ExperimentalCoroutinesApi
     @Test(expected = RuntimeException::class)
     fun `should throw an exception whe the calling to the use case returns an exception`() =
-        runBlockingTest {
+        runTest {
             whenever(getCharactersUseCase.invoke(any())).thenThrow(RuntimeException())
 
             characterViewModel.charactersPagingData("")

@@ -4,11 +4,16 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.bianchini.vinicius.matheus.core.domain.model.Character
+import com.example.marvelapp.framework.imageloader.GlideImageLoader
+import com.example.marvelapp.utils.CharacterItemClick
 
-class CharactersAdapter : PagingDataAdapter<Character, CharactersViewHolder>(diffCallback) {
+class CharactersAdapter(
+    private val imageLoader: GlideImageLoader,
+    private val onItemClick: CharacterItemClick
+) : PagingDataAdapter<Character, CharactersViewHolder>(diffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharactersViewHolder {
-        return CharactersViewHolder.create(parent)
+        return CharactersViewHolder.create(parent, imageLoader, onItemClick)
     }
 
     override fun onBindViewHolder(holder: CharactersViewHolder, position: Int) {
