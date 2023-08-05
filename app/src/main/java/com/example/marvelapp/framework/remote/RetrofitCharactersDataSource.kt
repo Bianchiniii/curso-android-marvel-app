@@ -1,6 +1,6 @@
 package com.example.marvelapp.framework.remote
 
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRemoteDataSource
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRemoteDataSource
 import com.bianchini.vinicius.matheus.core.domain.model.CharacterPaging
 import com.bianchini.vinicius.matheus.core.domain.model.Comic
 import com.bianchini.vinicius.matheus.core.domain.model.Event

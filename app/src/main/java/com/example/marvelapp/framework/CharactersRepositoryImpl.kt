@@ -1,8 +1,8 @@
 package com.example.marvelapp.framework
 
 import androidx.paging.PagingSource
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRemoteDataSource
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRemoteDataSource
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRepository
 import com.bianchini.vinicius.matheus.core.domain.model.Character
 import com.bianchini.vinicius.matheus.core.domain.model.Comic
 import com.bianchini.vinicius.matheus.core.domain.model.Event

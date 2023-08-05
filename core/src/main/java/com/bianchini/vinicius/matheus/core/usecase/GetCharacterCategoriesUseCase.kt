@@ -1,6 +1,6 @@
 package com.bianchini.vinicius.matheus.core.usecase
 
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRepository
 import com.bianchini.vinicius.matheus.core.domain.model.Comic
 import com.bianchini.vinicius.matheus.core.domain.model.Event
 import com.bianchini.vinicius.matheus.core.usecase.base.CoroutinesDispatchers

@@ -1,4 +1,4 @@
-package com.bianchini.vinicius.matheus.core.data.repository
+package com.bianchini.vinicius.matheus.core.data.repository.character
 
 import androidx.paging.PagingSource
 import com.bianchini.vinicius.matheus.core.domain.model.Character

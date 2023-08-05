@@ -5,4 +5,5 @@ object DbConstants {
     const val COLUMN_INFO_ID = "id"
     const val COLUMN_INFO_name = "name"
     const val COLUMN_INFO_IMAGE_URL = "image_url"
+    const val APP_DATABASE_NAME = "app_database"
 }

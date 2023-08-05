@@ -1,7 +1,7 @@
 package com.example.marvelapp.framework.paging
 
 import androidx.paging.PagingSource
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRemoteDataSource
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRemoteDataSource
 import com.example.marvelapp.factory.response.CharacterPagingResponseFactory
 import com.exemple.testing.MainCoroutineRule
 import com.exemple.testing.model.CharacterFactory

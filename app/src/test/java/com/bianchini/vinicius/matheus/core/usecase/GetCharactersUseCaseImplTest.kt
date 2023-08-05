@@ -1,7 +1,7 @@
 package com.bianchini.vinicius.matheus.core.usecase
 
 import androidx.paging.PagingConfig
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRepository
 import com.exemple.testing.MainCoroutineRule
 import com.exemple.testing.model.CharacterFactory
 import com.exemple.testing.pagingsource.PagingSourceFactory

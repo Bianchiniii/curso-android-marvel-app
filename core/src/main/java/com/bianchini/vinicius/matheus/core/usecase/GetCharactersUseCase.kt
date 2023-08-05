@@ -3,7 +3,7 @@ package com.bianchini.vinicius.matheus.core.usecase
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRepository
 import com.bianchini.vinicius.matheus.core.domain.model.Character
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase.GetCharactersParams
 import com.bianchini.vinicius.matheus.core.usecase.base.PagingUseCase

@@ -1,6 +1,6 @@
 package com.bianchini.vinicius.matheus.core.usecase
 
-import com.bianchini.vinicius.matheus.core.data.repository.CharactersRepository
+import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRepository
 import com.bianchini.vinicius.matheus.core.usecase.base.ResultStatus
 import com.exemple.testing.MainCoroutineRule
 import com.exemple.testing.model.CharacterFactory

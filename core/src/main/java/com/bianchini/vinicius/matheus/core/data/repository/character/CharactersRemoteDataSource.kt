@@ -1,4 +1,4 @@
-package com.bianchini.vinicius.matheus.core.data.repository
+package com.bianchini.vinicius.matheus.core.data.repository.character
 
 import com.bianchini.vinicius.matheus.core.domain.model.CharacterPaging
 import com.bianchini.vinicius.matheus.core.domain.model.Comic
