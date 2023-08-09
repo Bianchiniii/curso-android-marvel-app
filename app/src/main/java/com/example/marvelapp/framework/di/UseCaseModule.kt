@@ -1,5 +1,7 @@
 package com.example.marvelapp.framework.di
 
+import com.bianchini.vinicius.matheus.core.usecase.AddFavoriteUseCase
+import com.bianchini.vinicius.matheus.core.usecase.AddFavoriteUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCase
@@ -18,4 +20,7 @@ interface UseCaseModule {
 
     @Binds
     fun bindsComicsUseCase(useCaseImpl: GetCharacterCategoriesUseCaseImpl): GetCharacterCategoriesUseCase
+
+    @Binds
+    fun bindsAddFavoriteUseCase(useCaseImpl: AddFavoriteUseCaseImpl): AddFavoriteUseCase
 }
