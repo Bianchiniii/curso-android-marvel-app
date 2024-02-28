@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoritesLocalDataSource {
 
-    suspend fun getAllFavorites(): Flow<List<Character>>
+    fun getAllFavorites(): Flow<List<Character>>
 
     suspend fun saveFavorite(character: Character)
 

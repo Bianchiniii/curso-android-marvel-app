@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
-            tools:srcCompat="@drawable/ic_favorite_checked" />
+            android:src="@drawable/ic_favorite_unchecked" />
 
         <ProgressBar
             android:layout_width="30dp"

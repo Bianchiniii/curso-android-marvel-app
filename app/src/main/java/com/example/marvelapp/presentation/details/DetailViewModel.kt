@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bianchini.vinicius.matheus.core.usecase.AddFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCase
+import com.bianchini.vinicius.matheus.core.usecase.base.CoroutinesDispatchers
 import com.example.marvelapp.R
 import com.example.marvelapp.utils.watchStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,65 +16,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getCharacterCategoriesUseCase: GetCharacterCategoriesUseCase,
-    private val addFavoriteUseCase: AddFavoriteUseCase
+    getCharacterCategoriesUseCase: GetCharacterCategoriesUseCase,
+    private val addFavoriteUseCase: AddFavoriteUseCase,
+    coroutinesDispatchers: CoroutinesDispatchers
 ) : ViewModel() {
 
-    private val _uiStateFlow = MutableStateFlow<UiState>(UiState.Loading)
-    val uiState: StateFlow<UiState> get() = _uiStateFlow
+    val categories = UiActionStateStateFlow(
+        coroutinesDispatchers.main(),
+        getCharacterCategoriesUseCase
+    )
 
     private val _favoriteUiStateFlow = MutableStateFlow<FavoriteUiState>(FavoriteUiState.Loading)
     val favoriteUiState: StateFlow<FavoriteUiState> get() = _favoriteUiStateFlow
 
-    fun getCharactersCategories(characterId: Int) = viewModelScope.launch {
-        getCharacterCategoriesUseCase(
-            GetCharacterCategoriesUseCase.GetCharacterCategoriesParams(characterId)
-        ).watchStatus(
-            loading = {
-                _uiStateFlow.value = UiState.Loading,
-            },
-            success = { data ->
-                val detailsParentList = buildList {
-                    val comics = data.first
-                    if (comics.isNotEmpty()) {
-                        comics.map {
-                            DetailChildVE(
-                                it.id,
-                                it.thumbnail
-                            )
-                        }.also {
-                            add(
-                                DetailParentVE(R.string.details_comics_category, it)
-                            )
-                        }
-                    }
+    fun getCharactersCategories(characterId: Int) = categories.load(characterId)
 
-                    val events = data.second
-                    if (events.isNotEmpty()) {
-                        events.map {
-                            DetailChildVE(
-                                it.id,
-                                it.thumbnail
-                            )
-                        }.also {
-                            add(
-                                DetailParentVE(R.string.details_events_category, it)
-                            )
-                        }
-                    }
-                }
-
-                _uiStateFlow.value = if (detailsParentList.isEmpty()) {
-                    UiState.Empty
-                } else UiState.Success(detailsParentList)
-
-            },
-            error = {
-                _uiStateFlow.value = UiState.Error
-            }
-
-        )
-    }
 
     fun addFavoriteCharacter(detailViewArg: DetailViewArg) = viewModelScope.launch {
         addFavoriteUseCase(
@@ -95,13 +52,6 @@ class DetailViewModel @Inject constructor(
 
             }
         )
-    }
-
-    sealed class UiState {
-        object Loading : UiState()
-        data class Success(val detailParentVE: List<DetailParentVE>) : UiState()
-        object Error : UiState()
-        object Empty : UiState()
     }
 
     sealed class FavoriteUiState {
