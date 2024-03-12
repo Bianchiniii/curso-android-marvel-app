@@ -9,7 +9,7 @@ import com.example.marvelapp.R
 import com.example.marvelapp.utils.watchStatus
 import kotlin.coroutines.CoroutineContext
 
-class UiActionStateStateFlow(
+class UiActionStateFlow(
     private val coroutineContext: CoroutineContext,
     private val getCharacterCategories: GetCharacterCategoriesUseCase
 ) {
