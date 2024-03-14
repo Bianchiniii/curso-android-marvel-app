@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,7 +13,6 @@ import androidx.paging.LoadState
 import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.GlideImageLoader
 import com.example.marvelapp.presentation.details.DetailViewArg
-import com.example.marvelapp.utils.collectWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,33 +22,14 @@ import javax.inject.Inject
 class CharactersFragment : Fragment() {
 
     private lateinit var binding: FragmentCharactersBinding
-    private lateinit var charactersAdapter: CharactersAdapter
 
     private val viewModel: CharacterViewModel by viewModels()
 
     @Inject
     lateinit var imageLoader: GlideImageLoader
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) = FragmentCharactersBinding.inflate(layoutInflater, container, false).apply {
-        binding = this
-    }.root
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initCharactersAdapter()
-        observeInitialLoadState()
-
-        viewModel.charactersPagingData("").collectWithLifecycle(viewLifecycleOwner) { pagingData ->
-            charactersAdapter.submitData(pagingData)
-        }
-    }
-
-    private fun initCharactersAdapter() {
-        charactersAdapter = CharactersAdapter(imageLoader) { character, view ->
+    private val charactersAdapter by lazy {
+        CharactersAdapter(imageLoader) { character, view ->
             val extras = FragmentNavigatorExtras(
                 view to character.name
             )
@@ -66,14 +45,47 @@ class CharactersFragment : Fragment() {
 
             findNavController().navigate(directions, extras)
         }
-        //entrar no contexto do obj da pra utilizar o RUN ou WITH
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ) = FragmentCharactersBinding.inflate(layoutInflater, container, false).apply {
+        binding = this
+    }.root
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initCharactersAdapter()
+        observeInitialLoadState()
+
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is CharacterViewModel.UiState.SearchResult -> {
+                    charactersAdapter.submitData(
+                        viewLifecycleOwner.lifecycle,
+                        state.data
+                    )
+                }
+            }
+        }
+    }
+
+    private fun initCharactersAdapter() {
+        postponeEnterTransition()
+
         with(binding.recyclerCharacters) {
-            //itens com tamanho fixo, auxilia no desempenho
-            scrollToPosition(INIT_POSITION_ADAPTER)
             setHasFixedSize(true)
             adapter = charactersAdapter.withLoadStateFooter(
                 footer = CharactersLoadingMoreStateAdapter { charactersAdapter.retry() }
             )
+            viewTreeObserver.addOnPreDrawListener {
+
+                startPostponedEnterTransition()
+
+                true
+            }
         }
     }
 
@@ -103,11 +115,21 @@ class CharactersFragment : Fragment() {
         }
     }
 
-    private fun setShimmerVisibility(visibility: Boolean) {
+    private fun setShimmerVisibility(isVisible: Boolean) {
         binding.includeViewCharactersLoadingState.shimmerCharacters.run {
-            isVisible = visibility
-            if (visibility) startShimmer()
-            else hideShimmer()
+            when (isVisible) {
+                true -> {
+                    this.visibility = View.VISIBLE
+
+                    startShimmer()
+                }
+
+                false -> {
+                    this.visibility = View.GONE
+
+                    hideShimmer()
+                }
+            }
         }
     }
 
@@ -115,6 +137,5 @@ class CharactersFragment : Fragment() {
         private const val FLIPPER_CHILD_LOADING = 0
         private const val FLIPPER_CHILD_CHARACTERS = 1
         private const val FLIPPER_CHILD_ERROR = 2
-        private const val INIT_POSITION_ADAPTER = 0
     }
 }
