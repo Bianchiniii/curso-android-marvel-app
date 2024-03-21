@@ -7,6 +7,8 @@ interface FavoritesLocalDataSource {
 
     fun getAllFavorites(): Flow<List<Character>>
 
+    fun isFavorite(characterId: Int): Boolean
+
     suspend fun saveFavorite(character: Character)
 
     suspend fun deleteFavorite(character: Character)

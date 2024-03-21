@@ -3,6 +3,8 @@ package com.example.marvelapp.presentation.details
 import androidx.lifecycle.ViewModel
 import com.bianchini.vinicius.matheus.core.usecase.AddFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCase
+import com.bianchini.vinicius.matheus.core.usecase.IsFavoriteUseCase
+import com.bianchini.vinicius.matheus.core.usecase.RemoveFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.base.CoroutinesDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,6 +13,8 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     getCharacterCategoriesUseCase: GetCharacterCategoriesUseCase,
     addFavoriteUseCase: AddFavoriteUseCase,
+    isFavoriteUseCase: IsFavoriteUseCase,
+    removeFavoriteUseCase: RemoveFavoriteUseCase,
     coroutinesDispatchers: CoroutinesDispatchers
 ) : ViewModel() {
 
@@ -21,6 +25,8 @@ class DetailViewModel @Inject constructor(
 
     val favorite = UiActionFavoriteStateFlow(
         coroutinesDispatchers.main(),
-        addFavoriteUseCase
+        addFavoriteUseCase,
+        isFavoriteUseCase,
+        removeFavoriteUseCase
     )
 }

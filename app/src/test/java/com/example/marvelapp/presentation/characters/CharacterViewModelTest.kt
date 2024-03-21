@@ -52,7 +52,8 @@ class CharacterViewModelTest {
     @Before
     fun setUp() {
         //inicializa a classe que sera testada
-        characterViewModel = CharacterViewModel(getCharactersUseCase)
+        characterViewModel =
+            CharacterViewModel(getCharactersUseCase, mainCoroutineRule.testDispatcherProvider)
     }
 
     //teste a ser realizado
@@ -68,9 +69,11 @@ class CharacterViewModelTest {
 
             //com o TestCoroutineDispatcher, executa o teste de forma sincrona, sem depender da execução
             //em outras thread, ele executa as tarefas IMEDIATAMENTE
-            val result = characterViewModel.charactersPagingData("")
+            characterViewModel.searchCharacters("")
 
-            assertNotNull(result.first())
+            val state = characterViewModel.state.value as CharacterViewModel.UiState.SearchResult
+
+            assertNotNull(state.data)
         }
 
     @Test(expected = RuntimeException::class)
@@ -78,6 +81,6 @@ class CharacterViewModelTest {
         runTest {
             whenever(getCharactersUseCase.invoke(any())).thenThrow(RuntimeException())
 
-            characterViewModel.charactersPagingData("")
+            characterViewModel.searchCharacters("")
         }
 }

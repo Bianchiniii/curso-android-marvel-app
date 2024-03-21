@@ -53,32 +53,35 @@ class DetailFragment : Fragment() {
         observeUiState(detailViewArgs)
         observeFavoriteUiState()
 
-        viewModel.categories.load(detailViewArgs.id)
-
         binding.imageFavoriteIcon.setOnClickListener {
             viewModel.favorite.update(detailViewArgs)
         }
+
+        viewModel.favorite.isFavorite(detailViewArgs.id)
+        viewModel.categories.load(detailViewArgs.id)
     }
 
     private fun observeFavoriteUiState() {
-        viewModel.favorite.state.observe(viewLifecycleOwner) {
-            binding.flipperDetail.displayedChild = when (it) {
-                UiActionFavoriteStateFlow.UiState.Loading -> FLIP_FAVORITE_LOADING_STATE
+        viewModel.favorite.run {
+            state.observe(viewLifecycleOwner) {
+                binding.flipperDetail.displayedChild = when (it) {
+                    UiActionFavoriteStateFlow.UiState.Loading -> FLIP_FAVORITE_LOADING_STATE
 
-                is UiActionFavoriteStateFlow.UiState.Icon -> {
-                    binding.imageFavoriteIcon.setImageResource(it.icon)
+                    is UiActionFavoriteStateFlow.UiState.Icon -> {
+                        binding.imageFavoriteIcon.setImageResource(it.icon)
 
-                    FLIP_FAVORITE_SUCCESS_STATE
-                }
+                        FLIP_FAVORITE_SUCCESS_STATE
+                    }
 
-                is UiActionFavoriteStateFlow.UiState.Error -> {
-                    Snackbar.make(
-                        binding.root,
-                        it.message,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+                    is UiActionFavoriteStateFlow.UiState.Error -> {
+                        Snackbar.make(
+                            binding.root,
+                            it.message,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
 
-                    FLIP_FAVORITE_ERROR_STATE
+                        FLIP_FAVORITE_SUCCESS_STATE
+                    }
                 }
             }
         }
@@ -129,8 +132,7 @@ class DetailFragment : Fragment() {
         private const val FLIPPER_CHILD_POSITION_ERROR = 2
         private const val FLIPPER_CHILD_POSITION_EMPTY = 3
 
-        private const val FLIP_FAVORITE_LOADING_STATE = 4
-        private const val FLIP_FAVORITE_SUCCESS_STATE = 5
-        private const val FLIP_FAVORITE_ERROR_STATE = 6
+        private const val FLIP_FAVORITE_LOADING_STATE = 0
+        private const val FLIP_FAVORITE_SUCCESS_STATE = 1
     }
 }
