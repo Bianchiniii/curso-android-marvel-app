@@ -6,6 +6,8 @@ import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCaseImpl
+import com.bianchini.vinicius.matheus.core.usecase.GetFavoritesUseCase
+import com.bianchini.vinicius.matheus.core.usecase.GetFavoritesUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.IsFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.IsFavoriteUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.RemoveFavoriteUseCase
@@ -33,4 +35,7 @@ interface UseCaseModule {
 
     @Binds
     fun bindsIsRemoveFavoriteUseCase(useCaseImpl: RemoveFavoriteUseCaseImpl): RemoveFavoriteUseCase
+
+    @Binds
+    fun bindsGetFavoriteUseCase(useCaseImpl: GetFavoritesUseCaseImpl): GetFavoritesUseCase
 }
