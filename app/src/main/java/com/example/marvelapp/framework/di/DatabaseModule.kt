@@ -2,7 +2,7 @@ package com.example.marvelapp.framework.di
 
 import android.content.Context
 import androidx.room.Room
-import com.bianchini.vinicius.matheus.core.data.DbConstants.APP_DATABASE_NAME
+import com.bianchini.vinicius.matheus.core.data.GeneralDbConstants.APP_DATABASE_NAME
 import com.example.marvelapp.framework.db.AppDatabase
 import dagger.Module
 import dagger.Provides

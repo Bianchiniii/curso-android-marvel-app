@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import com.bianchini.vinicius.matheus.core.data.DbConstants.FAVORITES_TABLE_NAME
+import com.bianchini.vinicius.matheus.core.data.FavoriteDbConstants.FAVORITES_TABLE_NAME
 import com.example.marvelapp.framework.db.entity.FavoriteEntity
 import kotlinx.coroutines.flow.Flow
 
