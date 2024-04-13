@@ -12,6 +12,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.GlideImageLoader
+import com.example.marvelapp.presentation.characters.adapter.CharactersAdapter
+import com.example.marvelapp.presentation.characters.adapter.CharactersLoadingMoreStateAdapter
+import com.example.marvelapp.presentation.characters.adapter.CharactersRefreshStateAdapter
 import com.example.marvelapp.presentation.details.DetailViewArg
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -47,6 +50,10 @@ class CharactersFragment : Fragment() {
         }
     }
 
+    private val headerAdapter: CharactersRefreshStateAdapter by lazy {
+        CharactersRefreshStateAdapter(charactersAdapter::retry)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,8 +84,9 @@ class CharactersFragment : Fragment() {
 
         with(binding.recyclerCharacters) {
             setHasFixedSize(true)
-            adapter = charactersAdapter.withLoadStateFooter(
-                footer = CharactersLoadingMoreStateAdapter { charactersAdapter.retry() }
+            adapter = charactersAdapter.withLoadStateHeaderAndFooter(
+                footer = CharactersLoadingMoreStateAdapter { charactersAdapter.retry() },
+                header = headerAdapter
             )
             viewTreeObserver.addOnPreDrawListener {
 
@@ -92,23 +100,36 @@ class CharactersFragment : Fragment() {
     private fun observeInitialLoadState() {
         lifecycleScope.launch {
             charactersAdapter.loadStateFlow.collectLatest { loadingState ->
-                binding.flipperCharacters.displayedChild = when (loadingState.refresh) {
-                    is LoadState.Loading -> {
+                headerAdapter.loadState = loadingState.mediator
+                    ?.refresh
+                    ?.takeIf {
+                        it is LoadState.Error && charactersAdapter.itemCount > 0
+                    } ?: loadingState.prepend
+
+                binding.flipperCharacters.displayedChild = when {
+                    loadingState.mediator?.refresh is LoadState.Loading -> {
                         setShimmerVisibility(true)
                         FLIPPER_CHILD_LOADING
                     }
 
-                    is LoadState.NotLoading -> {
-                        setShimmerVisibility(false)
-                        FLIPPER_CHILD_CHARACTERS
-                    }
-
-                    is LoadState.Error -> {
+                    loadingState.mediator?.refresh is LoadState.Error
+                            && charactersAdapter.itemCount == EMPTY -> {
                         setShimmerVisibility(false)
                         binding.includeViewCharactersErrorState.buttonRetry.setOnClickListener {
                             charactersAdapter.retry()
                         }
                         FLIPPER_CHILD_ERROR
+                    }
+
+                    loadingState.source.refresh is LoadState.NotLoading
+                            || loadingState.mediator?.refresh is LoadState.NotLoading -> {
+                        setShimmerVisibility(false)
+                        FLIPPER_CHILD_CHARACTERS
+                    }
+
+                    else -> {
+                        setShimmerVisibility(false)
+                        FLIPPER_CHILD_CHARACTERS
                     }
                 }
             }
@@ -137,5 +158,7 @@ class CharactersFragment : Fragment() {
         private const val FLIPPER_CHILD_LOADING = 0
         private const val FLIPPER_CHILD_CHARACTERS = 1
         private const val FLIPPER_CHILD_ERROR = 2
+
+        private const val EMPTY = 0
     }
 }
