@@ -4,6 +4,8 @@ import com.bianchini.vinicius.matheus.core.usecase.AddFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.AddFavoriteUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharacterCategoriesUseCaseImpl
+import com.bianchini.vinicius.matheus.core.usecase.GetCharactersSortingUseCase
+import com.bianchini.vinicius.matheus.core.usecase.GetCharactersSortingUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.GetFavoritesUseCase
@@ -12,6 +14,8 @@ import com.bianchini.vinicius.matheus.core.usecase.IsFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.IsFavoriteUseCaseImpl
 import com.bianchini.vinicius.matheus.core.usecase.RemoveFavoriteUseCase
 import com.bianchini.vinicius.matheus.core.usecase.RemoveFavoriteUseCaseImpl
+import com.bianchini.vinicius.matheus.core.usecase.SaveCharactersSortingUseCase
+import com.bianchini.vinicius.matheus.core.usecase.SaveCharactersSortingUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -38,4 +42,10 @@ interface UseCaseModule {
 
     @Binds
     fun bindsGetFavoriteUseCase(useCaseImpl: GetFavoritesUseCaseImpl): GetFavoritesUseCase
+
+    @Binds
+    fun bindsGetCharactersSortingUseCase(useCaseImpl: GetCharactersSortingUseCaseImpl): GetCharactersSortingUseCase
+
+    @Binds
+    fun bindsSaveCharactersSortingUseCase(useCaseImpl: SaveCharactersSortingUseCaseImpl): SaveCharactersSortingUseCase
 }

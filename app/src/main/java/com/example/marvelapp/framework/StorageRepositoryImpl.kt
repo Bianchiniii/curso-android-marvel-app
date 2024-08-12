@@ -8,6 +8,7 @@ import javax.inject.Inject
 class StorageRepositoryImpl @Inject constructor(
     private val storageLocalDataSource: StorageLocalDataSource
 ) : StorageRepository {
+
     override val sorting: Flow<String>
         get() = storageLocalDataSource.sorting
 
