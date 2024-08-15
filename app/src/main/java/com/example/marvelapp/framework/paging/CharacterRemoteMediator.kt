@@ -19,6 +19,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalPagingApi::class)
 class CharacterRemoteMediator @Inject constructor(
     private val query: String,
+    private val orderBy: String,
     private val appDatabase: AppDatabase,
     private val remoteDataSource: CharactersRemoteDataSource
 ) : RemoteMediator<Int, CharacterEntity>() {
@@ -54,6 +55,8 @@ class CharacterRemoteMediator @Inject constructor(
             val queries = hashMapOf(OFFSET to offset.toString())
 
             if (query.isNotEmpty()) queries[NAME_STARTS_WITH] = query
+
+            if (orderBy.isNotEmpty()) queries[ORDER_BY] = orderBy
 
             val response = remoteDataSource.fetchCharacters(queries)
             val responseOffSet = response.offset
@@ -91,6 +94,7 @@ class CharacterRemoteMediator @Inject constructor(
     companion object {
         private const val OFFSET = "offset"
         private const val NAME_STARTS_WITH = "nameStartsWith"
+        private const val ORDER_BY = "orderBy"
         private const val INITIAL = 0
     }
 }

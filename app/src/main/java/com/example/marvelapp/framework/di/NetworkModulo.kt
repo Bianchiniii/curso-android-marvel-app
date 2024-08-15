@@ -19,8 +19,9 @@ import java.util.concurrent.TimeUnit
 @InstallIn(SingletonComponent::class)
 object NetworkModulo {
     private const val TIMEOUT_SECONDS = 15L
+    private const val READ_TIMEOUT_SECONDS = 45L
 
-    //Mostra as requisições realizadas no logcat em modo degub
+    //Mostra as requisições realizadas no logcatem modo degub
     @Provides
     fun providesLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
@@ -49,7 +50,7 @@ object NetworkModulo {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(authorizationInterceptor)
-            .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .readTimeout(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .build()
     }

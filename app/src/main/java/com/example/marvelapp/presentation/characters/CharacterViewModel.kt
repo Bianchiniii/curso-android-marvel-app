@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingConfig
@@ -23,23 +22,23 @@ class CharacterViewModel @Inject constructor(
     coroutinesDispatchers: CoroutinesDispatchers
 ) : ViewModel() {
 
+    var currentSearchQuery = ""
+
     private val action = MutableLiveData<UiAction>()
-    val state: LiveData<UiState> = action
-        .distinctUntilChanged()
-        .switchMap { action ->
-            when (action) {
-                is UiAction.Search -> {
-                    getCharactersUseCase(
-                        GetCharactersUseCase.GetCharactersParams(
-                            action.queries,
-                            getPageConfig()
-                        )
-                    ).cachedIn(viewModelScope).map {
-                        UiState.SearchResult(it)
-                    }.asLiveData(coroutinesDispatchers.main())
-                }
+    val state: LiveData<UiState> = action.switchMap { action ->
+        when (action) {
+            is UiAction.Search, UiAction.Sort -> {
+                getCharactersUseCase(
+                    GetCharactersUseCase.GetCharactersParams(
+                        currentSearchQuery,
+                        getPageConfig()
+                    )
+                ).cachedIn(viewModelScope).map {
+                    UiState.SearchResult(it)
+                }.asLiveData(coroutinesDispatchers.main())
             }
         }
+    }
 
     init {
         searchCharacters()
@@ -47,8 +46,18 @@ class CharacterViewModel @Inject constructor(
 
     private fun getPageConfig() = PagingConfig(PAGE_SIZE)
 
-    fun searchCharacters(queries: String = "") {
-        action.value = UiAction.Search(queries)
+    fun searchCharacters() {
+        action.value = UiAction.Search
+    }
+
+    fun applySort() {
+        action.value = UiAction.Sort
+    }
+
+    fun closeSearch() {
+        if (currentSearchQuery.isNotEmpty()) {
+            currentSearchQuery = ""
+        }
     }
 
     sealed class UiState {
@@ -58,9 +67,9 @@ class CharacterViewModel @Inject constructor(
     }
 
     sealed class UiAction {
-        data class Search(
-            val queries: String
-        ) : UiAction()
+        object Search : UiAction()
+
+        object Sort : UiAction()
     }
 
     companion object {

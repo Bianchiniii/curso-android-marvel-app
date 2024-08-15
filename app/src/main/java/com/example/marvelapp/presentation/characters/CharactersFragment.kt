@@ -7,15 +7,18 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.example.marvelapp.R
+import com.example.marvelapp.SortFragment.Companion.SORTING_APPLIED_BASK_STACK_KEY
 import com.example.marvelapp.databinding.FragmentCharactersBinding
 import com.example.marvelapp.framework.imageloader.GlideImageLoader
 import com.example.marvelapp.presentation.characters.adapter.CharactersAdapter
@@ -28,7 +31,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CharactersFragment : Fragment(), MenuProvider {
+class CharactersFragment : Fragment(), MenuProvider, SearchView.OnQueryTextListener,
+    MenuItem.OnActionExpandListener {
 
     private lateinit var binding: FragmentCharactersBinding
 
@@ -36,6 +40,8 @@ class CharactersFragment : Fragment(), MenuProvider {
 
     @Inject
     lateinit var imageLoader: GlideImageLoader
+
+    private lateinit var searchView: SearchView
 
     private val charactersAdapter by lazy {
         CharactersAdapter(imageLoader) { character, view ->
@@ -73,6 +79,21 @@ class CharactersFragment : Fragment(), MenuProvider {
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.characters_menu_items, menu)
+
+        val searchItem = menu.findItem(R.id.menu_search)
+        searchView = searchItem.actionView as SearchView
+
+        searchItem.setOnActionExpandListener(this)
+
+        if (viewModel.currentSearchQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(viewModel.currentSearchQuery, false)
+        }
+
+        searchView.apply {
+            isSubmitButtonEnabled = true
+            setOnQueryTextListener(this@CharactersFragment)
+        }
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -87,11 +108,24 @@ class CharactersFragment : Fragment(), MenuProvider {
         }
     }
 
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return query?.let {
+            viewModel.currentSearchQuery = it
+            viewModel.searchCharacters()
+            true
+        } ?: false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initCharactersAdapter()
         observeInitialLoadState()
+        observeSortingData()
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when (state) {
@@ -103,6 +137,39 @@ class CharactersFragment : Fragment(), MenuProvider {
                 }
             }
         }
+    }
+
+    private fun observeSortingData() {
+        // getBackStackEntry pq SortFragment é um BottomSheetDialogFragment
+        val navBackEntry = findNavController().getBackStackEntry(R.id.charactersFragment)
+        val observer = LifecycleEventObserver { _, event ->
+            val isSortingApply =
+                navBackEntry.savedStateHandle.contains(SORTING_APPLIED_BASK_STACK_KEY)
+
+            if (event == Lifecycle.Event.ON_RESUME && isSortingApply) {
+                navBackEntry.savedStateHandle.remove<Boolean>(SORTING_APPLIED_BASK_STACK_KEY)
+
+                viewModel.applySort()
+            }
+        }
+
+        navBackEntry.lifecycle.addObserver(observer)
+        viewLifecycleOwner.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_DESTROY) {
+                navBackEntry.lifecycle.removeObserver(observer)
+            }
+        })
+    }
+
+    override fun onMenuItemActionExpand(item: MenuItem): Boolean {
+       return true
+    }
+
+    override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+        viewModel.closeSearch()
+        viewModel.searchCharacters()
+
+        return true
     }
 
     private fun initCharactersAdapter() {
@@ -178,6 +245,12 @@ class CharactersFragment : Fragment(), MenuProvider {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        searchView.setOnQueryTextListener(null)
     }
 
     companion object {

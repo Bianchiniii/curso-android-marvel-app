@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.forEach
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bianchini.vinicius.matheus.core.domain.model.SortingType
 import com.example.marvelapp.databinding.FragmentSortBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -83,7 +84,7 @@ class SortFragment : BottomSheetDialogFragment() {
         viewModel.state.observe(viewLifecycleOwner) { uiState ->
             when (uiState) {
                 SortViewModel.UiState.ApplyState.Error -> {
-                    binding.flipperApply.displayedChild = FLIPPER_CHILD_PROGRESS
+                    binding.flipperApply.displayedChild = FLIPPER_CHILD_BUTTON
                 }
 
                 SortViewModel.UiState.ApplyState.Loading -> {
@@ -91,7 +92,14 @@ class SortFragment : BottomSheetDialogFragment() {
                 }
 
                 SortViewModel.UiState.ApplyState.Success -> {
-                    binding.flipperApply.displayedChild = FLIPPER_CHILD_BUTTON
+                    findNavController().run {
+                        previousBackStackEntry?.savedStateHandle?.set(
+                            SORTING_APPLIED_BASK_STACK_KEY,
+                            true
+                        )
+
+                        popBackStack()
+                    }
                 }
 
                 is SortViewModel.UiState.SortingResult -> {
@@ -128,5 +136,7 @@ class SortFragment : BottomSheetDialogFragment() {
     companion object {
         private const val FLIPPER_CHILD_BUTTON = 0
         private const val FLIPPER_CHILD_PROGRESS = 0
+
+        const val SORTING_APPLIED_BASK_STACK_KEY = "sortingAppliedBackStackKey"
     }
 }
