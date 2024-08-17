@@ -1,5 +1,7 @@
 package com.example.marvelapp.presentation.characters
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import androidx.paging.PagingData
 import com.bianchini.vinicius.matheus.core.usecase.GetCharactersUseCase
 import com.exemple.testing.MainCoroutineRule
@@ -8,7 +10,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -16,6 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
 //regra que inclue a dependencia do coroutines para inserir na thread principal e limpar após o fim
@@ -25,6 +27,9 @@ class CharacterViewModelTest {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     //dependencia de objeto -> unica forma de realizar testes com coroutines, flow, api ainda está
     //em desenvolvimento, podendo haver alterações
@@ -47,13 +52,15 @@ class CharacterViewModelTest {
     //a classe que sera realiazada os testes jamais devera ser mockada
     private lateinit var characterViewModel: CharacterViewModel
 
-
     //com a anotação @Before o metodo sera executado antes de cada teste
     @Before
     fun setUp() {
         //inicializa a classe que sera testada
         characterViewModel =
-            CharacterViewModel(getCharactersUseCase, mainCoroutineRule.testDispatcherProvider)
+            CharacterViewModel(
+                getCharactersUseCase,
+                mainCoroutineRule.testDispatcherProvider
+            )
     }
 
     //teste a ser realizado
@@ -67,9 +74,13 @@ class CharacterViewModelTest {
                 )
             )
 
+            val observer = mock(Observer::class.java) as Observer<CharacterViewModel.UiState>
+            characterViewModel.state.observeForever(observer)
+
             //com o TestCoroutineDispatcher, executa o teste de forma sincrona, sem depender da execução
             //em outras thread, ele executa as tarefas IMEDIATAMENTE
-            characterViewModel.searchCharacters("")
+            characterViewModel.searchCharacters()
+
 
             val state = characterViewModel.state.value as CharacterViewModel.UiState.SearchResult
 
@@ -81,6 +92,9 @@ class CharacterViewModelTest {
         runTest {
             whenever(getCharactersUseCase.invoke(any())).thenThrow(RuntimeException())
 
-            characterViewModel.searchCharacters("")
+            val observer = mock(Observer::class.java) as Observer<CharacterViewModel.UiState>
+            characterViewModel.state.observeForever(observer)
+
+            characterViewModel.searchCharacters()
         }
 }

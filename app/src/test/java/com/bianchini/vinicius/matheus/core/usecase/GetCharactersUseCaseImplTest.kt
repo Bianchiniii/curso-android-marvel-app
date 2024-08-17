@@ -1,17 +1,19 @@
 package com.bianchini.vinicius.matheus.core.usecase
 
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.bianchini.vinicius.matheus.core.data.repository.StorageRepository
 import com.bianchini.vinicius.matheus.core.data.repository.character.CharactersRepository
 import com.exemple.testing.MainCoroutineRule
 import com.exemple.testing.model.CharacterFactory
-import com.exemple.testing.pagingsource.PagingSourceFactory
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.*
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,30 +37,47 @@ class GetCharactersUseCaseImplTest {
     @Mock
     lateinit var charactersRepository: CharactersRepository
 
+    @Mock
+    lateinit var storageRepository: StorageRepository
+
     private val hero = CharacterFactory().create(CharacterFactory.Hero.ABomb)
-    private val fakePagingSource = PagingSourceFactory().create(listOf(hero))
+    private val fakePagingData = PagingData.from(listOf(hero))
 
     @Before
     fun setup() {
-        getCharacterUseCase = GetCharactersUseCaseImpl(charactersRepository)
+        getCharacterUseCase = GetCharactersUseCaseImpl(charactersRepository, storageRepository)
     }
 
     @Test
     fun `should valida flow paging data creation when invoke from use case is called`() =
         runTest {
+            val pagingConfig = PagingConfig(20)
+            val orderBy = "ascendig"
+            val query = "spider"
+            whenever(
+                charactersRepository.getCachedCharacters(
+                    query,
+                    orderBy,
+                    pagingConfig
+                )
+            ).thenReturn(
+                flowOf(fakePagingData)
+            )
 
-            whenever(charactersRepository.getCharacters("")).thenReturn(fakePagingSource)
+            whenever(
+                storageRepository.sorting
+            ).thenReturn(flowOf(orderBy))
 
             val result = getCharacterUseCase.invoke(
                 GetCharactersUseCase.GetCharactersParams(
-                    "",
-                    PagingConfig(20)
+                    query,
+                    pagingConfig
                 )
             )
 
             //used to check if some function is called
             // use TIMES
-            verify(charactersRepository, times(1)).getCharacters("")
+            verify(charactersRepository, times(1)).getCachedCharacters(query, orderBy, pagingConfig)
 
             assertNotNull(result.first())
         }

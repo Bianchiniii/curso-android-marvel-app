@@ -163,4 +163,6 @@ dependencies {
     implementation("com.github.Irineu333:Resource:master-SNAPSHOT")
 
     androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines"
+
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 }

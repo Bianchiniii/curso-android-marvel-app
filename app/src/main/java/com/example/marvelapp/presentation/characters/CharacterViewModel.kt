@@ -47,11 +47,11 @@ class CharacterViewModel @Inject constructor(
     private fun getPageConfig() = PagingConfig(PAGE_SIZE)
 
     fun searchCharacters() {
-        action.value = UiAction.Search
+        action.postValue(UiAction.Search)
     }
 
     fun applySort() {
-        action.value = UiAction.Sort
+        action.postValue(UiAction.Sort)
     }
 
     fun closeSearch() {
