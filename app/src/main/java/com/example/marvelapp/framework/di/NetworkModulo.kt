@@ -12,14 +12,15 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModulo {
     private const val TIMEOUT_SECONDS = 15L
-    private const val READ_TIMEOUT_SECONDS = 45L
+    private const val READ_TIMEOUT_SECONDS = 120L
 
     //Mostra as requisições realizadas no logcatem modo degub
     @Provides
